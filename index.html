@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDCLİNK</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --text-primary: #e0e0e0;
+            --text-secondary: #8888a0;
+            --accent: #00d4ff;
+            --accent-glow: rgba(0, 212, 255, 0.3);
+            --border: rgba(255, 255, 255, 0.08);
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --danger: #ff3366;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f0f2f5;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #1a1a2e;
+            --text-secondary: #666680;
+            --accent: #0066cc;
+            --accent-glow: rgba(0, 102, 204, 0.2);
+            --border: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, var(--accent-glow) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(120, 0, 255, 0.1) 0%, transparent 50%);
+            animation: bgMove 20s ease-in-out infinite;
+        }
+
+        @keyframes bgMove {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-5%, -5%); }
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 3rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.5s ease;
+        }
+
+        [data-theme="light"] .navbar {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .logo-nav {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--accent);
+            text-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .title-container {
+            margin-bottom: 3rem;
+            perspective: 1000px;
+        }
+
+        .title {
+            font-family: 'Orbitron', monospace;
+            font-size: 5rem;
+            font-weight: 900;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .letter {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(-200px) rotateX(-90deg);
+            animation: letterDrop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            text-shadow: 0 0 30px var(--accent-glow), 0 0 60px var(--accent-glow);
+            color: var(--text-primary);
+        }
+
+        .letter:nth-child(1) { animation-delay: 0.1s; }
+        .letter:nth-child(2) { animation-delay: 0.2s; }
+        .letter:nth-child(3) { animation-delay: 0.3s; }
+        .letter:nth-child(4) { animation-delay: 0.4s; }
+        .letter:nth-child(5) { animation-delay: 0.5s; }
+        .letter:nth-child(6) { animation-delay: 0.6s; }
+        .letter:nth-child(7) { animation-delay: 0.7s; }
+
+        @keyframes letterDrop {
+            0% {
+                opacity: 0;
+                transform: translateY(-200px) rotateX(-90deg);
+            }
+            60% {
+                opacity: 1;
+                transform: translateY(10px) rotateX(10deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotateX(0deg);
+            }
+        }
+
+        .btn-glow {
+            position: relative;
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            color: var(--text-primary);
+            background: transparent;
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            margin: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .btn-glow.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-glow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-glow:hover::before {
+            left: 100%;
+        }
+
+        .btn-glow:hover {
+            background: var(--accent);
+            color: var(--bg-primary);
+            box-shadow: 0 0 30px var(--accent-glow), 0 0 60px var(--accent-glow), inset 0 0 20px rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-glow:active {
+            transform: translateY(0);
+        }
+
+        .btn-getkey {
+            margin-top: 2rem;
+            padding: 1.2rem 4rem;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, var(--accent), #7b2ff7);
+            border: none;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-getkey::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, var(--accent), #7b2ff7, var(--accent));
+            border-radius: 14px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            filter: blur(10px);
+        }
+
+        .btn-getkey:hover::after {
+            opacity: 1;
+        }
+
+        .btn-getkey.locked {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .btn-getkey.locked::after {
+            display: none;
+        }
+
+        .btn-getkey.locked:hover {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            box-shadow: none;
+            transform: translateY(0);
+        }
+
+        .btn-getkey.unlocked {
+            animation: unlockPulse 0.6s ease;
+            cursor: pointer;
+        }
+
+        @keyframes unlockPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .lock-icon {
+            display: inline-block;
+            margin-right: 0.5rem;
+            transition: transform 0.5s ease;
+        }
+
+        .btn-getkey.unlocked .lock-icon {
+            animation: lockOpen 0.6s ease forwards;
+        }
+
+        @keyframes lockOpen {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(-20deg) scale(1.2); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+
+        .tasks-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .task-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-width: 400px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-card:hover {
+            border-color: var(--accent);
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .task-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .task-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+            border-radius: 10px;
+        }
+
+        .task-text {
+            font-weight: 600;
+        }
+
+        .task-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+        }
+
+        .task-btn {
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+            background: transparent;
+            color: var(--accent);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-btn:hover {
+            background: var(--accent);
+            color: var(--bg-primary);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .task-btn.completed {
+            background: var(--success);
+            border-color: var(--success);
+            color: var(--bg-primary);
+            pointer-events: none;
+        }
+
+        .task-btn .timer {
+            display: none;
+        }
+
+        .task-btn.counting {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .task-btn.counting .btn-text {
+            display: none;
+        }
+
+        .task-btn.counting .timer {
+            display: inline;
+        }
+
+        .key-display {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .key-display.active {
+            display: flex;
+        }
+
+        .key-box {
+            background: var(--bg-card);
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 1.5rem 3rem;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-shadow: 0 0 20px var(--accent-glow);
+            letter-spacing: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .key-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .btn-copy {
+            padding: 0.8rem 2.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-copy:hover {
+            border-color: var(--success);
+            color: var(--success);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .btn-copy.copied {
+            background: var(--success);
+            color: var(--bg-primary);
+            border-color: var(--success);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .modal-content {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .modal-content h3 {
+            color: var(--text-primary);
+            margin: 1rem 0 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .setting-label {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .toggle {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: var(--bg-primary);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .toggle.active {
+            background: var(--accent);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .toggle.active .toggle-slider {
+            transform: translateX(24px);
+        }
+
+        .lang-select {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+        }
+
+        .lang-select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .progress-container {
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-card);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #7b2ff7);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .warning-toast {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: var(--bg-card);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 3000;
+            box-shadow: 0 10px 30px rgba(255, 51, 102, 0.2);
+        }
+
+        .warning-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .title { font-size: 3rem; }
+            .task-card { min-width: unset; width: 100%; flex-direction: column; gap: 1rem; text-align: center; }
+            .navbar { padding: 1rem; }
+            .nav-links { gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <nav class="navbar">
+        <div class="logo-nav">MDCLİNK</div>
+        <div class="nav-links">
+            <button class="nav-btn" onclick="openModal('settings')">⚙️ <span data-lang="settings">Ayarlar</span></button>
+            <button class="nav-btn" onclick="openModal('about')">ℹ️ <span data-lang="about">Hakkında</span></button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="title-container">
+            <h1 class="title" id="mainTitle">
+                <span class="letter">M</span>
+                <span class="letter">D</span>
+                <span class="letter">C</span>
+                <span class="letter">L</span>
+                <span class="letter">İ</span>
+                <span class="letter">N</span>
+                <span class="letter">K</span>
+            </h1>
+        </div>
+
+        <!-- Tasks Container (Başlangıçta görünür) -->
+        <div class="tasks-container" id="tasksContainer">
+            <div class="task-card">
+                <div class="task-info">
+                    <div class="task-icon">📺</div>
+                    <div>
+                        <div class="task-text" data-lang="taskAd">Reklam İzle</div>
+                        <div class="task-desc" data-lang="taskAdDesc">30 saniyelik reklamı izle</div>
+                    </div>
+                </div>
+                <button class="task-btn" id="taskAd" onclick="startTask('ad')">
+                    <span class="btn-text" data-lang="start">Başla</span>
+                    <span class="timer">60s</span>
+                </button>
+            </div>
+
+            <div class="task-card">
+                <div class="task-info">
+                    <div class="task-icon">💬</div>
+                    <div>
+                        <div class="task-text" data-lang="taskDiscord">Discord'a Katıl</div>
+                        <div class="task-desc" data-lang="taskDiscordDesc">Sunucumuza katıl ve destek ol</div>
+                    </div>
+                </div>
+                <button class="task-btn" id="taskDiscord" onclick="startTask('discord')">
+                    <span class="btn-text" data-lang="join">Katıl</span>
+                    <span class="timer">60s</span>
+                </button>
+            </div>
+
+            <div class="task-card">
+                <div class="task-info">
+                    <div class="task-icon">☕</div>
+                    <div>
+                        <div class="task-text" data-lang="taskDonate">Donate At</div>
+                        <div class="task-desc" data-lang="taskDonateDesc">Geliştirmeyi destekle</div>
+                    </div>
+                </div>
+                <button class="task-btn" id="taskDonate" onclick="startTask('donate')">
+                    <span class="btn-text" data-lang="donate">Destekle</span>
+                    <span class="timer">60s</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="progressText">0 / 3 Görev Tamamlandı</div>
+        </div>
+
+        <!-- GET KEY Button (Görevlerin altında, kilitli) -->
+        <button class="btn-glow btn-getkey visible locked" id="getKeyBtn" onclick="handleGetKey()">
+            <span class="lock-icon" id="lockIcon">🔒</span>
+            <span data-lang="getKey">GET KEY</span>
+        </button>
+
+        <!-- Key Display -->
+        <div class="key-display" id="keyDisplay">
+            <div class="key-box" id="keyBox">MDCHR-1212</div>
+            <button class="btn-copy" id="copyBtn" onclick="copyKey()">
+                <span id="copyText" data-lang="copy">COPY</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Warning Toast -->
+    <div class="warning-toast" id="warningToast">COMPLETE TASKS FIRST</div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" data-lang="settingsTitle">Ayarlar</div>
+                <button class="modal-close" onclick="closeModal('settings')">×</button>
+            </div>
+            <div class="modal-content">
+                <div class="setting-item">
+                    <span class="setting-label" data-lang="theme">Tema</span>
+                    <div class="toggle" id="themeToggle" onclick="toggleTheme()">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label" data-lang="language">Dil</span>
+                    <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
+                        <option value="tr">🇹🇷 Türkçe</option>
+                        <option value="en">🇬🇧 English</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <div class="modal-overlay" id="aboutModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" data-lang="aboutTitle">Hakkında</div>
+                <button class="modal-close" onclick="closeModal('about')">×</button>
+            </div>
+            <div class="modal-content">
+                <h3>MDCLİNK</h3>
+                <p data-lang="aboutDesc">MDCLİNK, premium içerik ve araçlara erişim sağlayan modern bir platformdur.</p>
+                
+                <h3 data-lang="developers">Geliştiriciler</h3>
+                <p data-lang="devTeam">• Ana Geliştirici: MDCLİNK Team<br>• Tasarım: MDCLİNK Creative<br>• Destek: Topluluk</p>
+                
+                <h3 data-lang="version">Sürüm</h3>
+                <p>v1.0.0 - 2026</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            tr: {
+                settings: 'Ayarlar',
+                about: 'Hakkında',
+                getKey: 'GET KEY',
+                taskAd: 'Reklam İzle',
+                taskAdDesc: '30 saniyelik reklamı izle',
+                taskDiscord: 'Discord\'a Katıl',
+                taskDiscordDesc: 'Sunucumuza katıl ve destek ol',
+                taskDonate: 'Donate At',
+                taskDonateDesc: 'Geliştirmeyi destekle',
+                start: 'Başla',
+                join: 'Katıl',
+                donate: 'Destekle',
+                copy: 'COPY',
+                copied: 'COPIED!',
+                settingsTitle: 'Ayarlar',
+                theme: 'Tema',
+                language: 'Dil',
+                aboutTitle: 'Hakkında',
+                aboutDesc: 'MDCLİNK, premium içerik ve araçlara erişim sağlayan modern bir platformdur.',
+                developers: 'Geliştiriciler',
+                devTeam: '• Ana Geliştirici: MDCLİNK Team\n• Tasarım: MDCLİNK Creative\n• Destek: Topluluk',
+                version: 'Sürüm',
+                progressText: 'görev tamamlandı',
+                warning: 'ÖNCE GÖREVLERİ TAMAMLA'
+            },
+            en: {
+                settings: 'Settings',
+                about: 'About',
+                getKey: 'GET KEY',
+                taskAd: 'Watch Ad',
+                taskAdDesc: 'Watch 30 second ad',
+                taskDiscord: 'Join Discord',
+                taskDiscordDesc: 'Join our server and support us',
+                taskDonate: 'Donate',
+                taskDonateDesc: 'Support development',
+                start: 'Start',
+                join: 'Join',
+                donate: 'Support',
+                copy: 'COPY',
+                copied: 'COPIED!',
+                settingsTitle: 'Settings',
+                theme: 'Theme',
+                language: 'Language',
+                aboutTitle: 'About',
+                aboutDesc: 'MDCLİNK is a modern platform providing access to premium content and tools.',
+                developers: 'Developers',
+                devTeam: '• Lead Developer: MDCLİNK Team\n• Design: MDCLİNK Creative\n• Support: Community',
+                version: 'Version',
+                progressText: 'tasks completed',
+                warning: 'COMPLETE TASKS FIRST'
+            }
+        };
+
+        let currentLang = 'tr';
+        let completedTasks = 0;
+        const totalTasks = 3;
+        let tasksCompleted = { ad: false, discord: false, donate: false };
+        let isUnlocked = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.querySelectorAll('.btn-glow').forEach((btn, index) => {
+                    setTimeout(() => {
+                        btn.classList.add('visible');
+                    }, index * 200);
+                });
+            }, 1500);
+        });
+
+        function handleGetKey() {
+            if (!isUnlocked) {
+                showWarning();
+                return;
+            }
+            showKey();
+        }
+
+        function showWarning() {
+            const toast = document.getElementById('warningToast');
+            toast.textContent = translations[currentLang].warning;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        function startTask(taskType) {
+            const btn = document.getElementById('task' + taskType.charAt(0).toUpperCase() + taskType.slice(1));
+            if (tasksCompleted[taskType]) return;
+
+            btn.classList.add('counting');
+            let timeLeft = 60;
+            
+            const interval = setInterval(() => {
+                timeLeft--;
+                btn.querySelector('.timer').textContent = timeLeft + 's';
+                
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    completeTask(taskType, btn);
+                }
+            }, 1000);
+
+            if (taskType === 'ad') {
+                window.open('https://www.youtube.com', '_blank');
+            } else if (taskType === 'discord') {
+                window.open('https://discord.com', '_blank');
+            } else if (taskType === 'donate') {
+                window.open('https://www.buymeacoffee.com', '_blank');
+            }
+        }
+
+        function completeTask(taskType, btn) {
+            tasksCompleted[taskType] = true;
+            btn.classList.remove('counting');
+            btn.classList.add('completed');
+            
+            const texts = {
+                tr: { ad: 'Tamamlandı', discord: 'Katılındı', donate: 'Desteklendi' },
+                en: { ad: 'Completed', discord: 'Joined', donate: 'Supported' }
+            };
+            
+            btn.querySelector('.btn-text').textContent = texts[currentLang][taskType];
+            
+            completedTasks++;
+            updateProgress();
+            
+            if (completedTasks === totalTasks) {
+                setTimeout(unlockKey, 500);
+            }
+        }
+
+        function updateProgress() {
+            const percentage = (completedTasks / totalTasks) * 100;
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = 
+                `${completedTasks} / ${totalTasks} ${translations[currentLang].progressText}`;
+        }
+
+        function unlockKey() {
+            isUnlocked = true;
+            const btn = document.getElementById('getKeyBtn');
+            btn.classList.remove('locked');
+            btn.classList.add('unlocked');
+            document.getElementById('lockIcon').textContent = '🔓';
+            
+            btn.style.animation = 'unlockPulse 0.6s ease';
+        }
+
+        function showKey() {
+            document.getElementById('tasksContainer').style.display = 'none';
+            document.getElementById('progressContainer').style.display = 'none';
+            document.getElementById('getKeyBtn').style.display = 'none';
+            document.getElementById('keyDisplay').classList.add('active');
+        }
+
+        function copyKey() {
+            const key = document.getElementById('keyBox').textContent;
+            navigator.clipboard.writeText(key).then(() => {
+                const copyBtn = document.getElementById('copyBtn');
+                const copyText = document.getElementById('copyText');
+                
+                copyBtn.classList.add('copied');
+                copyText.textContent = translations[currentLang].copied;
+                
+                setTimeout(() => {
+                    copyBtn.classList.remove('copied');
+                    copyText.textContent = translations[currentLang].copy;
+                }, 2000);
+            });
+        }
+
+        function openModal(type) {
+            document.getElementById(type + 'Modal').classList.add('active');
+        }
+
+        function closeModal(type) {
+            document.getElementById(type + 'Modal').classList.remove('active');
+        }
+
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+
+        function toggleTheme() {
+            const toggle = document.getElementById('themeToggle');
+            const body = document.body;
+            
+            toggle.classList.toggle('active');
+            
+            if (toggle.classList.contains('active')) {
+                body.setAttribute('data-theme', 'light');
+            } else {
+                body.removeAttribute('data-theme');
+            }
+        }
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            const texts = translations[lang];
+            
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                const key = el.getAttribute('data-lang');
+                if (texts[key]) {
+                    if (key === 'devTeam') {
+                        el.innerHTML = texts[key].replace(/\n/g, '<br>');
+                    } else {
+                        el.textContent = texts[key];
+                    }
+                }
+            });
+            
+            updateProgress();
+        }
+
+        document.querySelectorAll('.btn-glow').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                btn.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+            
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+        });
+    </script>
+</body>
+</html>
